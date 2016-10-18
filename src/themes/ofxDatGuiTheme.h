@@ -22,7 +22,7 @@
 
 #pragma once
 #include "ofMain.h"
-#include "ofxSmartFont.h"
+#include "ofxSmartFontUC.h"
 
 #define RETINA_MIN_WIDTH 2560
 #define RETINA_MIN_HEIGHT 1600
@@ -73,7 +73,7 @@ class ofxDatGuiTheme{
             icon.groupOpen->load(icon.groupOpenPath);
             icon.groupClosed->load(icon.groupClosedPath);
             icon.rainbow->load(icon.rainbowPath);
-            font.ptr = ofxSmartFont::add(font.file, font.size);
+            font.ptr = ofxSmartFontUC::add(font.file, font.size);
         }
     
     /*
@@ -223,7 +223,7 @@ class ofxDatGuiTheme{
         struct {
             int size = 6;
             string file = AssetPath + "ofxbraitsch/fonts/Verdana.ttf";
-            shared_ptr<ofxSmartFont> ptr;
+            shared_ptr<ofxSmartFontUC> ptr;
         } font;
     
         struct{

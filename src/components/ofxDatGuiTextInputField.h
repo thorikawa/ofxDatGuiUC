@@ -298,7 +298,7 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
             ofColor highlight;
         } color;
         ofxDatGuiInputType mType;
-        shared_ptr<ofxSmartFont> mFont;
+        shared_ptr<ofxSmartFontUC> mFont;
 
 };
 

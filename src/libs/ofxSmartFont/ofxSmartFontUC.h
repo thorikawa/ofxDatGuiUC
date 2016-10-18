@@ -1,6 +1,5 @@
 /*
     Copyright (C) 2016 Stephen Braitsch [http://braitsch.io]
-    ofxSmartFont v1.0.0 https://github.com/braitsch/ofxSmartFont
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +21,9 @@
 */
 
 #pragma once
-#include "ofTrueTypeFont.h"
+#include "ofxTrueTypeFontUC.h"
 
-class ofxSmartFont {
+class ofxSmartFontUC : public ofxTrueTypeFontUC {
 
     public:
     
@@ -41,22 +40,21 @@ class ofxSmartFont {
         ofRectangle rect(string s, int x=0, int y=0);
         float width(string s, int x=0, int y=0);
         float height(string s, int x=0, int y=0);
-        float getLineHeight();
     
     /*
         static methods
     */
-        static shared_ptr<ofxSmartFont> add(string file, int size, string name = "");
-        static shared_ptr<ofxSmartFont> get(string name);
-        static shared_ptr<ofxSmartFont> get(string name, int size);
-        static shared_ptr<ofxSmartFont> get(vector<string> keys, int size);
+        static shared_ptr<ofxSmartFontUC> add(string file, int size, string name = "");
+        static shared_ptr<ofxSmartFontUC> get(string name);
+        static shared_ptr<ofxSmartFontUC> get(string name, int size);
+        static shared_ptr<ofxSmartFontUC> get(vector<string> keys, int size);
         static void list();
     
-        static vector<shared_ptr<ofxSmartFont>> mFonts;
+        static vector<shared_ptr<ofxSmartFontUC>> mFonts;
     
     private:
     
-        ofxSmartFont(string file, int size, string name)
+        ofxSmartFontUC(string file, int size, string name)
         {
             mSize = size;
             mFile = file;
@@ -65,7 +63,7 @@ class ofxSmartFont {
             }   else {
                 mName = file.substr(file.find_last_of("/\\") + 1);
             }
-            if (ttf.load(mFile, mSize) == false){
+            if (load(mFile, mSize) == false){
                 log("ERROR!! file : " + mFile + " NOT FOUND");
             }   else{
                 log("new font added : " +mName+" @ pt size "+std::to_string(mSize));
@@ -77,7 +75,6 @@ class ofxSmartFont {
         int mSize;
         string mFile;
         string mName;
-        ofTrueTypeFont ttf;
     
 };
 

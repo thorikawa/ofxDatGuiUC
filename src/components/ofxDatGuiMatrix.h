@@ -126,7 +126,7 @@ class ofxDatGuiMatrixButton : public ofxDatGuiInteractiveObject {
         bool mSelected;
         bool mShowLabels;
         ofRectangle mFontRect;
-        shared_ptr<ofxSmartFont> mFont;
+        shared_ptr<ofxSmartFontUC> mFont;
         struct {
             struct{
                 ofColor label;

@@ -114,7 +114,7 @@ class ofxDatGuiComponent : public ofxDatGuiInteractiveObject
         ofRectangle mMask;
         ofxDatGuiType mType;
         ofxDatGuiAnchor mAnchor;
-        shared_ptr<ofxSmartFont> mFont;
+        shared_ptr<ofxSmartFontUC> mFont;
     
         struct{
             float width;

@@ -1,6 +1,5 @@
 /*
     Copyright (C) 2016 Stephen Braitsch [http://braitsch.io]
-    ofxSmartFont v1.0.0 https://github.com/braitsch/ofxSmartFont
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -22,78 +21,73 @@
 */
 
 
-#include "ofxSmartFont.h"
-vector<shared_ptr<ofxSmartFont>> ofxSmartFont::mFonts;
+#include "ofxSmartFontUC.h"
+vector<shared_ptr<ofxSmartFontUC>> ofxSmartFontUC::mFonts;
 
 /*
     instance methods
 */
 
-void ofxSmartFont::draw(string s, int x, int y)
+void ofxSmartFontUC::draw(string s, int x, int y)
 {
-    ttf.drawString(s, x, y);
+    drawString(s, x, y);
 }
 
-string ofxSmartFont::name()
+string ofxSmartFontUC::name()
 {
     return mName;
 }
 
-void ofxSmartFont::name(string name)
+void ofxSmartFontUC::name(string name)
 {
     mName = name;
 }
 
-string ofxSmartFont::file()
+string ofxSmartFontUC::file()
 {
     return mFile;
 }
 
-int ofxSmartFont::size()
+int ofxSmartFontUC::size()
 {
     return mSize;
 }
 
-ofRectangle ofxSmartFont::rect(string s, int x, int y)
+ofRectangle ofxSmartFontUC::rect(string s, int x, int y)
 {
-    return ttf.getStringBoundingBox(s, x, y);
+    return getStringBoundingBox(s, x, y);
 }
 
-float ofxSmartFont::width(string s, int x, int y)
+float ofxSmartFontUC::width(string s, int x, int y)
 {
-    return ttf.getStringBoundingBox(s, x, y).width;
+    return getStringBoundingBox(s, x, y).width;
 }
 
-float ofxSmartFont::height(string s, int x, int y)
+float ofxSmartFontUC::height(string s, int x, int y)
 {
-    return ttf.getStringBoundingBox(s, x, y).height;
-}
-
-float ofxSmartFont::getLineHeight()
-{
-    return ttf.getLineHeight();
+    return getStringBoundingBox(s, x, y).height;
 }
 
 /*
     static methods
 */
 
-shared_ptr<ofxSmartFont> ofxSmartFont::add(string file, int size, string name)
+shared_ptr<ofxSmartFontUC> ofxSmartFontUC::add(string file, int size, string name)
 {
     for(auto f:mFonts){
         if (f->file()==file && f->size()==size){
-           // log(f->name() + "@ pt size "+std::to_string(f->size()) + " is already in memory.");
+            log(f->name() + "@ pt size "+std::to_string(f->size()) + " is already in memory.");
             return f;
         }
     }
-    struct make_shared_sf : public ofxSmartFont {
-        make_shared_sf(string file, int size, string name) : ofxSmartFont(file, size, name){}
+    struct make_shared_sf : public ofxSmartFontUC {
+        make_shared_sf(string file, int size, string name) : ofxSmartFontUC(file, size, name){}
     };
     mFonts.push_back(make_shared<make_shared_sf>(file, size, name));
     return mFonts.back();
 }
 
-shared_ptr<ofxSmartFont> ofxSmartFont::get(string name)
+shared_ptr<ofxSmartFontUC> ofxSmartFontUC::get(string name)
 {
     for(auto f:mFonts){
         if (f->name()==name) return f;
@@ -102,7 +96,7 @@ shared_ptr<ofxSmartFont> ofxSmartFont::get(string name)
     return nullptr;
 }
 
-shared_ptr<ofxSmartFont> ofxSmartFont::get(string name, int size)
+shared_ptr<ofxSmartFontUC> ofxSmartFontUC::get(string name, int size)
 {
     for(auto f:mFonts){
         if (f->file().find(name) != std::string::npos && f->size()==size){
@@ -113,7 +107,7 @@ shared_ptr<ofxSmartFont> ofxSmartFont::get(string name, int size)
     return nullptr;
 }
 
-shared_ptr<ofxSmartFont> ofxSmartFont::get(vector<string> keys, int size)
+shared_ptr<ofxSmartFontUC> ofxSmartFontUC::get(vector<string> keys, int size)
 {
     for(auto f:mFonts){
         bool match = true;
@@ -131,7 +125,7 @@ shared_ptr<ofxSmartFont> ofxSmartFont::get(vector<string> keys, int size)
     return nullptr;
 }
 
-void ofxSmartFont::list()
+void ofxSmartFontUC::list()
 {
     log("----------------------------------");
     log("total # of fonts cached = " + std::to_string(mFonts.size()));
@@ -141,8 +135,8 @@ void ofxSmartFont::list()
     log("----------------------------------");
 }
 
-void ofxSmartFont::log(string msg)
+void ofxSmartFontUC::log(string msg)
 {
-    cout << "ofxSmartFont :: "<< msg << endl;
+    cout << "ofxSmartFontUC :: "<< msg << endl;
 }
 

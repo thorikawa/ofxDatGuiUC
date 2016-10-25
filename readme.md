@@ -1,39 +1,28 @@
-##ofxDatGui
+##ofxDatGuiUC
 
-**ofxDatGui** is a **simple to use**, fully customizable, high-resolution graphical user interface for [openFrameworks](http://openframeworks.cc/) inspired by the popular JavaScript [datgui](http://workshop.chromeexperiments.com/examples/gui/) interface.  
+**ofxDatGuiUC** is an Unicode compatible version of [**ofxDatGUI**](https://braitsch.github.io/ofxDatGui/).
 
-![ofxDatGui](http://braitsch.github.io/ofxDatGui/img/ofxdatgui_.png "ofxDatGui")
+The original version of `ofxDatGUI` does not support multi-bytes characters, because it depends on `ofxTrueTypeFont`, which does not support either. Thanks to `ofxTrueTypeFontUC`, this version successfully support multi-bytes unicode characters.
 
-##Features
+All header files are the same as the original one, so if you already uses it, you just need to create and set the custom theme to use a font file to support characters you want to use.
 
-**ofxDatGui** offers the following features & components:
+### Example
+`
+class ofxDatGuiThemeCustom : public ofxDatGuiTheme{
+public:
+    ofxDatGuiThemeVrtrip()
+    {
+        font.file = "anotherttf.ttf";
+        init();
+    }
+};
+`
 
-* Click & Toggle (On/Off) Buttons
-* Text Input Fields
-* Color Pickers
-* Range Sliders
-* Dropdown Menus
-* Scroll Views
-* Button Matrices
-* Coordinate Pads
-* Value Plotters
-* Waveform Monitors
-* Framerate Monitor
-* Variable Binding
-* Completely Customizable
-* Folders to group components together
-* An optional header & footer that allow you to title the gui, collapse and drag it around
+`
+void ofApp::setup()
+{
+    theme = new ofxDatGuiThemeCustom();
+    yourcomponent->setTheme(theme);
+}
+`
 
-##Documentation
-
-[The latest **ofxDatGui** docs are located here](http://braitsch.github.io/ofxDatGui/)
-
-##ofParameter Support
-
-**ofParameter** support is the single most requested feature and is currently in development. Therefore, **I am not accepting ofParameter related pull requests until the first stable version of ofxDatGui with ofParameter support is released.**
-
-##Questions & Feedback
-
-Questions, feedback, feature requests and ideas for improvement are all very much welcome. Please [open an issue](https://github.com/braitsch/ofxDatGui/issues) or join the conversation on this [openFrameworks thread](https://forum.openframeworks.cc/t/ofxdatgui-a-new-user-interface-for-of/20553) before sending me an email.
-
-If you're enjoying ofxDatGui please star the repository or consider making a small donation to help support its ongoing development. If you've made something with it that you'd like to share [please let me know](https://twitter.com/braitsch) and I'll add it to the [gallery.](http://braitsch.github.io/ofxDatGui/gallery.html)

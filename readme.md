@@ -10,7 +10,7 @@ All header files are the same as the original one, so if you already uses it, yo
 ```
 class ofxDatGuiThemeCustom : public ofxDatGuiTheme{
 public:
-    ofxDatGuiThemeVrtrip()
+    ofxDatGuiThemeCustom()
     {
         font.file = "anotherttf.ttf";
         init();

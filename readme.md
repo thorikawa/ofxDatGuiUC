@@ -7,7 +7,7 @@ The original version of `ofxDatGUI` does not support multi-bytes characters, bec
 All header files are the same as the original one, so if you already uses it, you just need to create and set the custom theme to use a font file to support characters you want to use.
 
 ### Example
-`
+```
 class ofxDatGuiThemeCustom : public ofxDatGuiTheme{
 public:
     ofxDatGuiThemeVrtrip()
@@ -16,13 +16,12 @@ public:
         init();
     }
 };
-`
+```
 
-`
+```
 void ofApp::setup()
 {
     theme = new ofxDatGuiThemeCustom();
     yourcomponent->setTheme(theme);
 }
-`
-
+```

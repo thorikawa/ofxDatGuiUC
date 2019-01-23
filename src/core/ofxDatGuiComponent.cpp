@@ -166,6 +166,7 @@ void ofxDatGuiComponent::setVisible(bool visible)
         ofxDatGuiInternalEvent e(ofxDatGuiEventType::VISIBILITY_CHANGED, mIndex);
         internalEventCallback(e);
     }
+    for (auto i:children) i->setVisible(visible);
 }
 
 bool ofxDatGuiComponent::getVisible()

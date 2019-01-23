@@ -45,11 +45,12 @@ public:
      list manipulation
      */
     
-    void add(string label)
+    ofxDatGuiToggle* add(string label)
     {
         int y = 0;
         if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-        children.push_back(new ofxDatGuiToggle( label ));
+        auto comp = new ofxDatGuiToggle( label );
+        children.push_back(comp);
         children.back()->setMask(mRect);
         children.back()->setTheme(mTheme);
         children.back()->setWidth(mRect.width, 0);
@@ -57,6 +58,7 @@ public:
         children.back()->onToggleEvent(this, &ofxDatGuiToggleScrollView::onToggleEvent);
         //  cout << "ofxDatGuiToggleScrollView :: total items = " << children.size() << endl;
         if (mAutoHeight) autoSize();
+        return comp;
     }
     
     ofxDatGuiToggle* get(int index)
@@ -215,22 +217,24 @@ public:
     
     void draw()
     {
-        ofPushStyle();
-        ofFill();
-        // draw a background behind the fbo //
-        ofSetColor(ofColor::black);
-        ofDrawRectangle(mRect);
-        // draw into the fbo //
-        mView.begin();
-        ofClear(255,255,255,0);
-        ofSetColor(mBackground);
-        ofDrawRectangle(0, 0, mRect.width, mRect.height);
-        for(auto i:children) i->draw();
-        mView.end();
-        // draw the fbo of list content //
-        ofSetColor(ofColor::white);
-        mView.draw(mRect.x, mRect.y);
-        ofPopStyle();
+        if (mVisible) {
+            ofPushStyle();
+            ofFill();
+            // draw a background behind the fbo //
+            ofSetColor(ofColor::black);
+            ofDrawRectangle(mRect);
+            // draw into the fbo //
+            mView.begin();
+            ofClear(255,255,255,0);
+            ofSetColor(mBackground);
+            ofDrawRectangle(0, 0, mRect.width, mRect.height);
+            for(auto i:children) i->draw();
+            mView.end();
+            // draw the fbo of list content //
+            ofSetColor(ofColor::white);
+            mView.draw(mRect.x, mRect.y);
+            ofPopStyle();
+        }
     }
     
 private:

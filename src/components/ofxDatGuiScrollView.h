@@ -215,22 +215,24 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
     
         void draw()
         {
-            ofPushStyle();
-                ofFill();
-            // draw a background behind the fbo //
-                ofSetColor(ofColor::black);
-                ofDrawRectangle(mRect);
-            // draw into the fbo //
-                mView.begin();
-                ofClear(255,255,255,0);
-                ofSetColor(mBackground);
-                ofDrawRectangle(0, 0, mRect.width, mRect.height);
-                for(auto i:children) i->draw();
-                mView.end();
-            // draw the fbo of list content //
-                ofSetColor(ofColor::white);
-                mView.draw(mRect.x, mRect.y);
-            ofPopStyle();
+            if (mVisible) {
+                ofPushStyle();
+                    ofFill();
+                // draw a background behind the fbo //
+                    ofSetColor(ofColor::black);
+                    ofDrawRectangle(mRect);
+                // draw into the fbo //
+                    mView.begin();
+                    ofClear(255,255,255,0);
+                    ofSetColor(mBackground);
+                    ofDrawRectangle(0, 0, mRect.width, mRect.height);
+                    for(auto i:children) i->draw();
+                    mView.end();
+                // draw the fbo of list content //
+                    ofSetColor(ofColor::white);
+                    mView.draw(mRect.x, mRect.y);
+                ofPopStyle();
+            }
         }
 
     private:

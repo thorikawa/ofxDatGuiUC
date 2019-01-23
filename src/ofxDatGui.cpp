@@ -911,7 +911,7 @@ void ofxDatGui::draw()
             ofDrawRectangle(mPosition.x, mPosition.y, mWidth, mGuiFooter->getHeight());
             mGuiFooter->draw();
         }   else{
-            ofDrawRectangle(mPosition.x, mPosition.y, mWidth, mHeight - mRowSpacing);
+//            ofDrawRectangle(mPosition.x, mPosition.y, mWidth, mHeight - mRowSpacing);
             for (int i=0; i<items.size(); i++) items[i]->draw();
         // color pickers overlap other components when expanded so they must be drawn last //
             for (int i=0; i<items.size(); i++) items[i]->drawColorPicker();

@@ -31,6 +31,7 @@ class ofxDatGui2dPad;
 class ofxDatGuiColorPicker;
 class ofxDatGuiMatrix;
 class ofxDatGuiScrollView;
+class ofxDatGuiToggleScrollView;
 
 enum ofxDatGuiEventType
 {
@@ -143,6 +144,20 @@ class ofxDatGuiScrollViewEvent{
     int index;
     ofxDatGuiButton* target;
     ofxDatGuiScrollView* parent;
+};
+
+class ofxDatGuiToggleScrollViewEvent{
+    
+public:
+    ofxDatGuiToggleScrollViewEvent(ofxDatGuiToggleScrollView* p, ofxDatGuiToggle* b, int i)
+    {
+        index = i;
+        target = b;
+        parent = p;
+    }
+    int index;
+    ofxDatGuiToggle* target;
+    ofxDatGuiToggleScrollView* parent;
 };
 
 class ofxDatGui2dPadEvent{

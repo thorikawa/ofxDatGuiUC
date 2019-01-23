@@ -191,6 +191,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         {
             mRect.x = x;
             mRect.y = y;
+            for (auto i:children) i->setMask(mRect);
         }
     
         void setItemSpacing(int spacing)

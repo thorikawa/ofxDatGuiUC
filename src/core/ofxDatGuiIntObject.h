@@ -192,6 +192,20 @@ class ofxDatGuiInteractiveObject{
             scrollViewEventCallback = callback;
         }
 
+    // togglescrollview events //
+    typedef std::function<void(ofxDatGuiToggleScrollViewEvent)> onToggleScrollViewEventCallback;
+    onToggleScrollViewEventCallback toggleScrollViewEventCallback;
+    
+    template<typename T, typename args, class ListenerClass>
+    void onToggleScrollViewEvent(T* owner, void (ListenerClass::*listenerMethod)(args))
+    {
+        toggleScrollViewEventCallback = std::bind(listenerMethod, owner, std::placeholders::_1);
+    }
+    
+    void onToggleScrollViewEvent(onToggleScrollViewEventCallback callback) {
+        toggleScrollViewEventCallback = callback;
+    }
+
     // internal events //
         typedef std::function<void(ofxDatGuiInternalEvent)> onInternalEventCallback;
         onInternalEventCallback internalEventCallback;

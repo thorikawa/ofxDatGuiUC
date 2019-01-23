@@ -45,11 +45,12 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         list manipulation
     */
     
-        void add(string label)
+        ofxDatGuiButton* add(string label)
         {
             int y = 0;
             if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-            children.push_back(new ofxDatGuiButton( label ));
+            auto comp = new ofxDatGuiButton( label );
+            children.push_back(comp);
             children.back()->setMask(mRect);
             children.back()->setTheme(mTheme);
             children.back()->setWidth(mRect.width, 0);
@@ -57,6 +58,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             children.back()->onButtonEvent(this, &ofxDatGuiScrollView::onButtonEvent);
         //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
             if (mAutoHeight) autoSize();
+            return comp;
         }
     
         ofxDatGuiButton* get(int index)

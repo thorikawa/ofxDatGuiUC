@@ -281,7 +281,7 @@ private:
     
     void onToggleEvent(ofxDatGuiToggleEvent e)
     {
-        if (scrollViewEventCallback != nullptr) {
+        if (toggleScrollViewEventCallback != nullptr) {
             int i = 0;
             for(i; i<children.size(); i++) if (children[i] == e.target) break;
             ofxDatGuiToggleScrollViewEvent e1(this, e.target, i);

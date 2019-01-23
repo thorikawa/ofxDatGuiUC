@@ -45,7 +45,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         list manipulation
     */
     
-        ofxDatGuiButton* add(string label)
+        ofxDatGuiButton* addButton(string label)
         {
             int y = 0;
             if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
@@ -61,14 +61,62 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             return comp;
         }
     
-        ofxDatGuiButton* get(int index)
+        ofxDatGuiToggle* addToggle(string label)
         {
-            return static_cast<ofxDatGuiButton*>(children[index]);
+            int y = 0;
+            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
+            auto comp = new ofxDatGuiToggle( label );
+            children.push_back(comp);
+            children.back()->setMask(mRect);
+            children.back()->setTheme(mTheme);
+            children.back()->setWidth(mRect.width, 0);
+            children.back()->setPosition(0, y);
+            children.back()->onToggleEvent(this, &ofxDatGuiScrollView::onToggleEvent);
+            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
+            if (mAutoHeight) autoSize();
+            return comp;
+        }
+
+        ofxDatGuiLabel* addLabel(string label)
+        {
+            int y = 0;
+            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
+            auto comp = new ofxDatGuiLabel( label );
+            children.push_back(comp);
+            children.back()->setMask(mRect);
+            children.back()->setTheme(mTheme);
+            children.back()->setWidth(mRect.width, 0);
+            children.back()->setPosition(0, y);
+            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
+            if (mAutoHeight) autoSize();
+            return comp;
+        }
+
+        ofxDatGuiBreak* addBreak()
+        {
+            int y = 0;
+            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
+            auto comp = new ofxDatGuiBreak();
+            children.push_back(comp);
+            children.back()->setMask(mRect);
+            children.back()->setTheme(mTheme);
+            children.back()->setWidth(mRect.width, 0);
+            children.back()->setPosition(0, y);
+            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
+            if (mAutoHeight) autoSize();
+            return comp;
+        }
+
+        template <typename T>
+        T* get(int index)
+        {
+            return static_cast<T*>(children[index]);
         }
     
-        ofxDatGuiButton* get(string name)
+        template <typename T>
+        T* get(string name)
         {
-            for(auto i:children) if (i->is(name)) return static_cast<ofxDatGuiButton*>(i);
+            for(auto i:children) if (i->is(name)) return static_cast<T*>(i);
             return nullptr;
         }
     
@@ -221,12 +269,12 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
                 ofPushStyle();
                     ofFill();
                 // draw a background behind the fbo //
-                    ofSetColor(ofColor::black);
+                    ofSetColor(mBackground, mStyle.opacity);
                     ofDrawRectangle(mRect);
                 // draw into the fbo //
                     mView.begin();
                     ofClear(255,255,255,0);
-                    ofSetColor(mBackground);
+                    ofSetColor(mBackground, mStyle.opacity);
                     ofDrawRectangle(0, 0, mRect.width, mRect.height);
                     for(auto i:children) i->draw();
                     mView.end();
@@ -294,7 +342,19 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
                 ofxDatGuiLog::write(ofxDatGuiMsg::EVENT_HANDLER_NULL);
             }
         }
-    
+
+        void onToggleEvent(ofxDatGuiToggleEvent e)
+        {
+            if (scrollViewEventCallback != nullptr) {
+                int i = 0;
+                for(i; i<children.size(); i++) if (children[i] == e.target) break;
+                ofxDatGuiScrollViewEvent e1(this, e.target, i);
+                scrollViewEventCallback(e1);
+            }   else{
+                ofxDatGuiLog::write(ofxDatGuiMsg::EVENT_HANDLER_NULL);
+            }
+        }
+
         void positionItems()
         {
             int y = mY;

@@ -49,13 +49,17 @@ public:
         ofxDatGuiComponent::positionLabel();
     }
     
-    void setImage(string path) {
-        ofDisableDataPath();
+    void setImage(string path, bool isDataPath = true) {
+        if (!isDataPath) {
+            ofDisableDataPath();
+        }
         isImageLoaded = image.load(path);
         if (!isImageLoaded) {
             ofLogWarning() << "image load failed";
         }
-        ofEnableDataPath();
+        if (!isDataPath) {
+            ofEnableDataPath();
+        }
     }
     
     void draw()

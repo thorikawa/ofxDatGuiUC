@@ -23,6 +23,8 @@
 #pragma once
 #include "ofxDatGuiGroups.h"
 #include "ofxDatGuiControls.h"
+#include "ofxDatGuiScrollView.h"
+#include "ofxDatGuiToggleScrollView.h"
 
 class ofxDatGui : public ofxDatGuiInteractiveObject
 {

@@ -22,6 +22,7 @@
 
 #pragma once
 #include "ofxDatGuiComponent.h"
+#include "ofxDatGuiGroups.h"
 
 class ofxDatGuiScrollView : public ofxDatGuiComponent {
 
@@ -47,64 +48,48 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
     
         ofxDatGuiButton* addButton(string label)
         {
-            int y = 0;
-            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-            auto comp = new ofxDatGuiButton( label );
-            children.push_back(comp);
-            children.back()->setMask(mRect);
-            children.back()->setTheme(mTheme);
-            children.back()->setWidth(mRect.width, 0);
-            children.back()->setPosition(0, y);
-            children.back()->onButtonEvent(this, &ofxDatGuiScrollView::onButtonEvent);
-        //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
-            if (mAutoHeight) autoSize();
-            return comp;
+            auto button = new ofxDatGuiButton( label );
+            attachItem(button);
+            button->onButtonEvent(this, &ofxDatGuiScrollView::onButtonEvent);
+            return button;
         }
     
         ofxDatGuiToggle* addToggle(string label)
         {
-            int y = 0;
-            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-            auto comp = new ofxDatGuiToggle( label );
-            children.push_back(comp);
-            children.back()->setMask(mRect);
-            children.back()->setTheme(mTheme);
-            children.back()->setWidth(mRect.width, 0);
-            children.back()->setPosition(0, y);
-            children.back()->onToggleEvent(this, &ofxDatGuiScrollView::onToggleEvent);
-            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
-            if (mAutoHeight) autoSize();
-            return comp;
+            auto toggle = new ofxDatGuiToggle( label );
+            attachItem(toggle);
+            toggle->onToggleEvent(this, &ofxDatGuiScrollView::onToggleEvent);
+            return toggle;
         }
 
         ofxDatGuiLabel* addLabel(string label)
         {
-            int y = 0;
-            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-            auto comp = new ofxDatGuiLabel( label );
-            children.push_back(comp);
-            children.back()->setMask(mRect);
-            children.back()->setTheme(mTheme);
-            children.back()->setWidth(mRect.width, 0);
-            children.back()->setPosition(0, y);
-            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
-            if (mAutoHeight) autoSize();
-            return comp;
+            auto component = new ofxDatGuiLabel( label );
+            attachItem(component);
+            return component;
         }
 
         ofxDatGuiBreak* addBreak()
         {
-            int y = 0;
-            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
-            auto comp = new ofxDatGuiBreak();
-            children.push_back(comp);
-            children.back()->setMask(mRect);
-            children.back()->setTheme(mTheme);
-            children.back()->setWidth(mRect.width, 0);
-            children.back()->setPosition(0, y);
-            //  cout << "ofxDatGuiScrollView :: total items = " << children.size() << endl;
-            if (mAutoHeight) autoSize();
-            return comp;
+            auto space = new ofxDatGuiBreak();
+            attachItem(space);
+            return space;
+        }
+
+        ofxDatGuiTextInput* addTextInput(string label, string value = "")
+        {
+            auto component = new ofxDatGuiTextInput(label, value);
+            // TODO event
+            attachItem(component);
+            return component;
+        }
+
+        ofxDatGuiDropdown* addDropdown(string label, vector<string> options)
+        {
+            auto component = new ofxDatGuiDropdown(label, options);
+            // TODO event
+            attachItem(component);
+            return component;
         }
 
         template <typename T>
@@ -283,6 +268,18 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
                     mView.draw(mRect.x, mRect.y);
                 ofPopStyle();
             }
+        }
+
+        void attachItem(ofxDatGuiComponent* item)
+        {
+            int y = 0;
+            if (children.size() > 0) y = children.back()->getY() + children.back()->getHeight() + mSpacing;
+            children.push_back(item);
+            children.back()->setMask(mRect);
+            children.back()->setTheme(mTheme);
+            children.back()->setWidth(mRect.width, 0);
+            children.back()->setPosition(0, y);
+            if (mAutoHeight) autoSize();
         }
 
     private:

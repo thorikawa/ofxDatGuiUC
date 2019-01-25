@@ -304,8 +304,8 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         {
             if (children.size() > 0 && mRect.inside(e.x, e.y) == true){
                 float sy = e.scrollY * 2;
-                int btnH = children.front()->getHeight() + mSpacing;
-                int minY = mRect.height + mSpacing  - (children.size() * btnH);
+                int allH = children.back()->getY() + children.back()->getHeight() - children.front()->getY();
+                int minY = mRect.height - allH;
                 bool allowScroll = false;
                 mY = children.front()->getY();
                 if (sy < 0){
@@ -322,8 +322,11 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
                     }
                 }
                 if (allowScroll){
-                    children.front()->setPosition(0, mY);
-                    for(int i=0; i<children.size(); i++) children[i]->setPosition(0, mY + (btnH * i));
+                    int currentH = mY;
+                    for(int i=0; i<children.size(); i++) {
+                        children[i]->setPosition(0, currentH);
+                        currentH += children[i]->getHeight() + mSpacing;
+                    }
                 }
             }
         }

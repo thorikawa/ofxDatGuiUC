@@ -29,6 +29,7 @@
 #include "ofTexture.h"
 #include "ofMesh.h"
 #include "ofUtils.h"
+#include "ofGraphics.h"
 #include "ofPixels.h"
 
 using namespace std;
@@ -40,10 +41,20 @@ static const basic_string<unsigned int> convToUTF32(const string &src) {
     if (src.size() == 0) {
         return basic_string<unsigned int> ();
     }
-
+    
+    // convert XXX -> UTF-16
+    const int n_size = ::MultiByteToWideChar(CP_ACP, 0, src.c_str(), -1, NULL, 0);
+    vector<wchar_t> buffUTF16(n_size);
+    ::MultiByteToWideChar(CP_ACP, 0, src.c_str(), -1, &buffUTF16[0], n_size);
+    
+    // convert UTF-16 -> UTF-8
+    const int utf8str_size = ::WideCharToMultiByte(CP_UTF8, 0, &buffUTF16[0], -1, NULL, 0, NULL, 0);
+    vector<char> buffUTF8(utf8str_size);
+    ::WideCharToMultiByte(CP_UTF8, 0, &buffUTF16[0], -1, &buffUTF8[0], utf8str_size, NULL, 0);
+    
     // convert UTF-8 -> UTF-32 (UCS-4)
     std::wstring_convert<std::codecvt_utf8<unsigned int>, unsigned int> convert32;
-    return convert32.from_bytes(src);
+    return convert32.from_bytes(&buffUTF8[0]);
 }
 
 #else
@@ -137,17 +148,17 @@ public:
     
     float lineHeight_;
     float letterSpacing_;
-    float	spaceSize_;
+    float    spaceSize_;
     
     vector<charPropsUC> cps;  // properties for each character
     
-    int	fontSize_;
+    int    fontSize_;
     bool bMakeContours_;
     
     void drawChar(int c, float x, float y);
     void drawCharAsShape(int c, float x, float y);
     
-    int	border_;  // visibleBorder;
+    int    border_;  // visibleBorder;
     string filename_;
     
     // ofTexture texAtlas;
@@ -199,10 +210,10 @@ static ofPath makeContoursForCharacter(FT_Face & face);
 
 static ofPath makeContoursForCharacter(FT_Face & face) {
     
-    int nContours	= face->glyph->outline.n_contours;
-    int startPos	= 0;
+    int nContours    = face->glyph->outline.n_contours;
+    int startPos    = 0;
     
-    char * tags		= face->glyph->outline.tags;
+    char * tags        = face->glyph->outline.tags;
     FT_Vector * vec = face->glyph->outline.points;
     
     ofPath charOutlines;
@@ -261,9 +272,9 @@ static ofPath makeContoursForCharacter(FT_Face & face) {
                     bool lastPointCubic =  ( FT_CURVE_TAG(tags[prevPoint]) != FT_CURVE_TAG_ON ) && ( FT_CURVE_TAG(tags[prevPoint]) == FT_CURVE_TAG_CUBIC);
                     
                     if( lastPointCubic ){
-                        ofPoint controlPoint1((float)vec[prevPoint].x,	(float)-vec[prevPoint].y);
+                        ofPoint controlPoint1((float)vec[prevPoint].x,    (float)-vec[prevPoint].y);
                         ofPoint controlPoint2((float)vec[j].x, (float)-vec[j].y);
-                        ofPoint nextPoint((float) vec[nextIndex].x,	-(float) vec[nextIndex].y);
+                        ofPoint nextPoint((float) vec[nextIndex].x,    -(float) vec[nextIndex].y);
                         
                         //cubic_bezier(testOutline, lastPoint.x, lastPoint.y, controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, nextPoint.x, nextPoint.y, 8);
                         charOutlines.bezierTo(controlPoint1.x/64, controlPoint1.y/64, controlPoint2.x/64, controlPoint2.y/64, nextPoint.x/64, nextPoint.y/64);
@@ -502,8 +513,8 @@ static string linuxFontPathByName(string fontname){
 //------------------------------------------------------------------
 ofxTrueTypeFontUC::ofxTrueTypeFontUC() {
     mImpl = new Impl();
-    mImpl->bLoadedOk_	= false;
-    mImpl->bMakeContours_	= false;
+    mImpl->bLoadedOk_    = false;
+    mImpl->bMakeContours_    = false;
 #if defined(TARGET_ANDROID) || defined(TARGET_OF_IOS)
     all_fonts().insert(this);
 #endif
@@ -736,7 +747,7 @@ void ofxTrueTypeFontUC::Impl::drawChar(int c, float x, float y) {
         return;
     }
     
-    GLfloat	x1, y1, x2, y2;
+    GLfloat    x1, y1, x2, y2;
     GLfloat t1, v1, t2, v2;
     t2 = cps[c].t2;
     v2 = cps[c].v2;
@@ -777,7 +788,7 @@ vector<ofPath> ofxTrueTypeFontUC::getStringAsPoints(const string &src, bool vfli
         return shapes;
     }
     
-    GLint index	= 0;
+    GLint index    = 0;
     GLfloat X = 0;
     GLfloat Y = 0;
     int newLineDirection = 1;
@@ -843,8 +854,8 @@ ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &src, float x, 
     int len = (int)utf32_src.length();
     
     GLint index = 0;
-    GLfloat xoffset	= 0;
-    GLfloat yoffset	= 0;
+    GLfloat xoffset    = 0;
+    GLfloat yoffset    = 0;
     float minx = -1;
     float miny = -1;
     float maxx = -1;
@@ -880,8 +891,8 @@ ofRectangle ofxTrueTypeFontUC::getStringBoundingBox(const string &src, float x, 
             GLint height = mImpl->cps[cy].height;
             GLint bwidth = mImpl->cps[cy].width * mImpl->letterSpacing_;
             GLint top = mImpl->cps[cy].topExtent - mImpl->cps[cy].height;
-            GLint lextent	= mImpl->cps[cy].leftExtent;
-            float	x1, y1, x2, y2, corr, stretch;
+            GLint lextent    = mImpl->cps[cy].leftExtent;
+            float    x1, y1, x2, y2, corr, stretch;
             stretch = 0;
             corr = (float)(((mImpl->fontSize_ - height) + top) - mImpl->fontSize_);
             x1 = (x + xoffset + lextent + bwidth + stretch);
@@ -937,7 +948,7 @@ void ofxTrueTypeFontUC::drawString(const string &src, float x, float y){
         return;
     }
     
-    GLint index	= 0;
+    GLint index    = 0;
     GLfloat X = x;
     GLfloat Y = y;
     
@@ -1194,15 +1205,15 @@ void ofxTrueTypeFontUC::Impl::loadChar(const int &charID) {
     GLint fheight = cps[i].height;
     GLint bwidth = cps[i].width;
     GLint top = cps[i].topExtent - cps[i].height;
-    GLint lextent	= cps[i].leftExtent;
+    GLint lextent    = cps[i].leftExtent;
     
-    GLfloat	corr, stretch;
+    GLfloat    corr, stretch;
     
     //this accounts for the fact that we are showing 2*visibleBorder extra pixels
     //so we make the size of each char that many pixels bigger
     stretch = 0;
     
-    corr	= (float)(((fontSize_ - fheight) + top) - fontSize_);
+    corr    = (float)(((fontSize_ - fheight) + top) - fontSize_);
     
     cps[i].x1 = lextent + bwidth + stretch;
     cps[i].y1 = fheight + corr + stretch;
@@ -1264,7 +1275,20 @@ void ofxTrueTypeFontUC::Impl::loadChar(const int &charID) {
     cps[i].v1 = float(cps[i].tH + border_) / float(h);
     expandedData.pasteInto(atlasPixels, border_, border_);
     
-    textures[i].allocate(atlasPixels.getWidth(), atlasPixels.getHeight(), GL_LUMINANCE_ALPHA, false);
+    int glFormat[] = {GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA};
+    bool swizzle = false;
+    
+#ifndef TARGET_OPENGLES
+    glFormat[0] = GL_RG16;
+    glFormat[1] = GL_RG;
+    swizzle = true;
+#endif
+    
+    textures[i].allocate(atlasPixels.getWidth(), atlasPixels.getHeight(), glFormat[0], false);
+    
+    if (swizzle) {
+        textures[i].setRGToRGBASwizzles(true);
+    }
     
     if (bAntiAliased_ && fontSize_>20) {
         textures[i].setTextureMinMagFilter(GL_LINEAR,GL_LINEAR);
@@ -1274,9 +1298,8 @@ void ofxTrueTypeFontUC::Impl::loadChar(const int &charID) {
     }
     
 #if (OF_VERSION_MAJOR == 0 && OF_VERSION_MINOR >= 9 && OF_VERSION_PATCH >= 2) || OF_VERSION_MAJOR > 0
-    textures[i].loadData(atlasPixels.getData(), atlasPixels.getWidth(), atlasPixels.getHeight(), GL_LUMINANCE_ALPHA);
+    textures[i].loadData(atlasPixels.getData(), atlasPixels.getWidth(), atlasPixels.getHeight(), glFormat[1]);
 #else
-    textures[i].loadData(atlasPixels.getPixels(), atlasPixels.getWidth(), atlasPixels.getHeight(), GL_LUMINANCE_ALPHA);
+    textures[i].loadData(atlasPixels.getPixels(), atlasPixels.getWidth(), atlasPixels.getHeight(), glFormat[1]);
 #endif
 }
-

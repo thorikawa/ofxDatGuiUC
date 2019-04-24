@@ -111,11 +111,11 @@ class ofxDatGuiTextInput : public ofxDatGuiComponent {
             ofxDatGuiComponent::onFocusLost();
         }
     
-        void onKeyPressed(int key)
+        void onKeyPressed(int key, int keycode)
         {
             if (key != OF_KEY_UP &&
                 key != OF_KEY_DOWN)
-            mInput.onKeyPressed(key);
+            mInput.onKeyPressed(key, keycode);
         }
     
         virtual void onInputChanged(ofxDatGuiInternalEvent e)

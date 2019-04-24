@@ -274,9 +274,9 @@ class ofxDatGuiSlider : public ofxDatGuiComponent {
             if (mInput->hasFocus()) mInput->onFocusLost();
         }
     
-        void onKeyPressed(int key)
+        void onKeyPressed(int key, int keycode)
         {
-            if (mInput->hasFocus()) mInput->onKeyPressed(key);
+            if (mInput->hasFocus()) mInput->onKeyPressed(key, keycode);
         }
     
         void onInputChanged(ofxDatGuiInternalEvent e)

@@ -74,6 +74,8 @@ enum class ofxDatGuiType
     VALUE_PLOTTER
 };
 
-
-
-
+#ifdef TARGET_OSX
+#define DATGUI_KEY_COMMAND_OR_CONTROL OF_KEY_COMMAND
+#else
+#define DATGUI_KEY_COMMAND_OR_CONTROL OF_KEY_CONTROL
+#endif

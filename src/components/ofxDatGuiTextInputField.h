@@ -184,7 +184,7 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
             }
         }
     
-        void onKeyPressed(int key)
+        void onKeyPressed(int key, int keycode)
         {
             if (!keyIsValid(key)) return;
             if (mHighlightText) {
@@ -204,6 +204,10 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
                 setCursorIndex(max( (int) mCursorIndex - 1, 0));
             } else if (key == OF_KEY_RIGHT) {
                 setCursorIndex(min( mCursorIndex + 1, (unsigned int) mText.size()));
+            } else if ((keycode == 'v' || keycode == 'V') && ofGetKeyPressed(DATGUI_KEY_COMMAND_OR_CONTROL)) {
+                string clipboardContents = ofGetWindowPtr()->getClipboardString();
+                setText(mText.substr(0, mCursorIndex) + clipboardContents + mText.substr(mCursorIndex));
+                setCursorIndex(mCursorIndex + clipboardContents.length());
             } else {
             // insert character at cursor position //
                 setText(mText.substr(0, mCursorIndex) + (char)key + mText.substr(mCursorIndex));

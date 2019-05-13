@@ -22,6 +22,7 @@
 
 #pragma once
 
+class ofxDatGuiComponent;
 class ofxDatGuiButton;
 class ofxDatGuiToggle;
 class ofxDatGuiSlider;
@@ -135,14 +136,14 @@ class ofxDatGuiDropdownEvent{
 class ofxDatGuiScrollViewEvent{
 
     public:
-        ofxDatGuiScrollViewEvent(ofxDatGuiScrollView* p, ofxDatGuiButton* b, int i)
+        ofxDatGuiScrollViewEvent(ofxDatGuiScrollView* p, ofxDatGuiComponent* b, int i)
         {
             index = i;
             target = b;
             parent = p;
         }
     int index;
-    ofxDatGuiButton* target;
+    ofxDatGuiComponent* target;
     ofxDatGuiScrollView* parent;
 };
 

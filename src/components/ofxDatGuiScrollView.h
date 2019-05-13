@@ -28,7 +28,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
 
     public:
     
-        ofxDatGuiScrollView(string name, int nVisible = 6) : ofxDatGuiComponent(name)
+        ofxDatGuiScrollView(string name, int nVisible = 6) : ofxDatGuiComponent(name), mY(0)
         {
             mAutoHeight = true;
             mNumVisible = nVisible;
@@ -54,9 +54,9 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             return button;
         }
     
-        ofxDatGuiToggle* addToggle(string label)
+        ofxDatGuiToggle* addToggle(string label, bool enabled)
         {
-            auto toggle = new ofxDatGuiToggle( label );
+            auto toggle = new ofxDatGuiToggle(label, enabled);
             attachItem(toggle);
             toggle->onToggleEvent(this, &ofxDatGuiScrollView::onToggleEvent);
             return toggle;
@@ -74,6 +74,14 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             auto space = new ofxDatGuiBreak();
             attachItem(space);
             return space;
+        }
+
+        ofxDatGuiSlider* addSlider(string label, float min, float max, float val)
+        {
+            ofxDatGuiSlider* slider = new ofxDatGuiSlider(label, min, max, val);
+            // TODO event
+            attachItem(slider);
+            return slider;
         }
 
         ofxDatGuiTextInput* addTextInput(string label, string value = "")
@@ -245,6 +253,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
 
         void update()
         {
+            positionItems();
             for(auto i:children) i->update();
         }
     
@@ -334,8 +343,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         void onButtonEvent(ofxDatGuiButtonEvent e)
         {
             if (scrollViewEventCallback != nullptr) {
-                int i = 0;
-                for(i; i<children.size(); i++) if (children[i] == e.target) break;
+                int i = indexOfChildren(e.target);
                 ofxDatGuiScrollViewEvent e1(this, e.target, i);
                 scrollViewEventCallback(e1);
             }   else{
@@ -346,8 +354,7 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         void onToggleEvent(ofxDatGuiToggleEvent e)
         {
             if (scrollViewEventCallback != nullptr) {
-                int i = 0;
-                for(i; i<children.size(); i++) if (children[i] == e.target) break;
+                int i = indexOfChildren(e.target);
                 ofxDatGuiScrollViewEvent e1(this, e.target, i);
                 scrollViewEventCallback(e1);
             }   else{
@@ -359,6 +366,8 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
         {
             int y = mY;
             for(auto i:children){
+                if (!i->getVisible()) continue;
+                ofLog() << i << ":" << i->getVisible() << ":" << y;
                 i->setPosition(0, y);
                 y = i->getY() + i->getHeight() + mSpacing;
             }
@@ -369,4 +378,9 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             return index >= 0 && index < children.size();
         }
 
+        int indexOfChildren(ofxDatGuiComponent* target) {
+            int i = 0;
+            for(i; i<children.size(); i++) if (children[i] == target) break;
+            return i;
+        }
 };

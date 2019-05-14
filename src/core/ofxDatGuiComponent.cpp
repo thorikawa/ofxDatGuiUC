@@ -212,6 +212,9 @@ bool ofxDatGuiComponent::getMouseDown()
 void ofxDatGuiComponent::setMask(const ofRectangle &mask)
 {
     mMask = mask;
+    for(int i=0; i<children.size(); i++) {
+        children[i]->setMask(mask);
+    }
 }
 
 void ofxDatGuiComponent::setAnchor(ofxDatGuiAnchor anchor)

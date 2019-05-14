@@ -367,7 +367,6 @@ class ofxDatGuiScrollView : public ofxDatGuiComponent {
             int y = mY;
             for(auto i:children){
                 if (!i->getVisible()) continue;
-                ofLog() << i << ":" << i->getVisible() << ":" << y;
                 i->setPosition(0, y);
                 y = i->getY() + i->getHeight() + mSpacing;
             }

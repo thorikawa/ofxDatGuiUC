@@ -189,7 +189,17 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
             if (!keyIsValid(key)) return;
             if (mHighlightText) {
             // if key is printable or delete
-                if ((key >= 32 && key <= 255) || key == OF_KEY_BACKSPACE || key == OF_KEY_DEL) {
+                if ((keycode == 'c' || keycode == 'C') && ofGetKeyPressed(DATGUI_KEY_COMMAND_OR_CONTROL)) {
+                    if (mHighlightText) {
+                        ofGetWindowPtr()->setClipboardString(mText);
+                    }
+                } else if ((keycode == 'x' || keycode == 'X') && ofGetKeyPressed(DATGUI_KEY_COMMAND_OR_CONTROL)) {
+                    if (mHighlightText) {
+                        ofGetWindowPtr()->setClipboardString(mText);
+                        setText("");
+                        setCursorIndex(0);
+                    }
+                } else if ((key >= 32 && key <= 255) || key == OF_KEY_BACKSPACE || key == OF_KEY_DEL) {
                     setText("");
                     setCursorIndex(0);
                 }

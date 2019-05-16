@@ -186,7 +186,7 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
     
         void onKeyPressed(int key, int keycode)
         {
-            if (!keyIsValid(key)) return;
+            if (!keyIsValid(key, keycode)) return;
             if (mHighlightText) {
             // if key is printable or delete
                 if ((keycode == 'c' || keycode == 'C') && ofGetKeyPressed(DATGUI_KEY_COMMAND_OR_CONTROL)) {
@@ -242,7 +242,7 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
     
     protected:
     
-        bool keyIsValid(int key)
+        bool keyIsValid(int key, int keycode)
         {
             if (key == OF_KEY_BACKSPACE || key == OF_KEY_LEFT || key == OF_KEY_RIGHT){
                 return true;
@@ -272,6 +272,11 @@ class ofxDatGuiTextInputField : public ofxDatGuiInteractiveObject{
                     return false;
                 }
             }   else if (mType == ofxDatGuiInputType::ALPHA_NUMERIC){
+				if (ofGetKeyPressed(DATGUI_KEY_COMMAND_OR_CONTROL)) {
+					if (keycode >= 32 && keycode <= 255) {
+						return true;
+					}
+				}
             // limit range to printable characters http://www.ascii-code.com //
                 if (key >= 32 && key <= 255) {
                     return true;
